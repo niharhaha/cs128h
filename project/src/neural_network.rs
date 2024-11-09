@@ -1,32 +1,73 @@
 use nalgebra::{DMatrix, DVector};
+pub trait Loss {
+    fn compute(&self, result: &DVector<f64>, test : &DVector<f64>) -> f64;
+    fn gradient(&self, result : &DVector<f64>, test : &DVector<f64>) -> DVector<f64>;
+}
+pub trait Layer {
+    fn forward(&self, input : &DVector<f64>) -> DVector<f64> //forward feed
+    fn backward(&self, error: &DVector<f64>, learn: f64) -> DVector <f64> //backward feed for backprop
 
-pub stuct Network {
-    input: usize, //Num Inputs
-    hidden: usize, //Num Hidden
-    output: usize, //Num Outputs
-    input_weight: DMatrix<f64>, //Weight of Each Input
-    output_weight: DMatrix<f64>, //Weight of Each Output
-    bias: DVector<f64>,
-    output_bias: DVector<f64>,
+}
+pub struct DenseLayer {
+    weights : DMatrix<f64>,
+    biases : DVector<f64>,
 }
 
-impl Network {
-    pub fn new(input : usize, hidden: usize, output: usize) -> Self {
-        let input_weight = DMatrix::<f64>::new_random(hidden, input);
-        let output_weight = DMatrix::<f64>::new_random(output, hidden);
-        let bias = DVector::<f64>::new_random(hidden);
-        let output_bias = DVector::<f64>::new_random(output);
-        Network {
-            input,
-            hidden,
-            output,
-            input_weight,
-            output_weight,
-            bias,
-            output_bias,
+impl DenseLayer {
+    pub fn new(input : usize, output : usize) -> Self {
+        let weights = DMatrix::<f64>::new_random(output, input);
+        let biases = DVector::<f64>::new_random(output);
+    }
+}
+
+impl Layer for DenseLayer {
+    fn forward(&self, input : DVector<f64>) -> DVector<f64> {
+        //IMPLEMENT FEED FORWARD
+        //TODO
+    }
+    fn backward(&self, error: &DVector<f64>, learn: <f64>) -> DVector<f64> {
+        //IMPLEMENT BACK PROPOGATION
+        //TODO
+    }
+}
+
+pub struct MeanSquaredError;
+impl LossFunction for MeanSquaredError {
+ fn compute(&self, result : &DVector<f64>, test : &DVector<f64>) -> f64 {
+    //TODO
+ }   
+ fn gradient(&self, result : &DVector<f64>, test : &DVector<f64>) -> DVector<f64> {
+    //TODO
+ }
+}
+
+// More Loss Functions TBA
+
+pub struct NeuralNetwork {
+    layers : Vec<Box<dyn Layer>>,
+    loss : Box<dyn LossFunction>,
+}
+
+impl NeuralNetwork {
+    pub fn new(layers : Vec<Box<dyn Layer>>, loss : Box<dyn LossFunction>) -> Self {
+        Neural Network {
+            layers,
+            loss
         }
     }
     pub fn forward(&self, input : DVector<f64>) -> DVector<f64> {
-
+        let mut result = input.clone();
+        for layer in &self.layers {
+            result = layer.forward(&result);
+        }
+        return result;
+    }
+    pub fkn backprop(&mut self, input : &DVector<f64>, test : &DVector<f64>, learn : f64) {
+        //TODO
+    }
+    pub fn train(&mut self input : &DVector<f64>, test : &DVector<f64>, learn : f64, epochs : usize) {
+        for i in 0..epochs {
+            self.backprop(input, target, learn);
+        }
     }
 }
