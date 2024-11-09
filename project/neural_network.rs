@@ -11,7 +11,7 @@ pub stuct Network {
 }
 
 impl Network {
-    pub fn new(input, hidden, output) -> Self {
+    pub fn new(input : usize, hidden: usize, output: usize) -> Self {
         let input_weight = DMatrix::<f64>::new_random(hidden, input);
         let output_weight = DMatrix::<f64>::new_random(output, hidden);
         let bias = DVector::<f64>::new_random(hidden);
@@ -25,5 +25,8 @@ impl Network {
             bias,
             output_bias,
         }
+    }
+    pub fn forward(&self, input : DVector<f64>) -> DVector<f64> {
+
     }
 }
