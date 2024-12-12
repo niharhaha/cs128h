@@ -39,12 +39,6 @@ impl Layer for DenseLayer {
         return activated;
     }
     fn backward(&mut self, error: &DVector<f64>, learn: f64) -> DVector<f64> {
-    //   let err_col = DMatrix::from_column_slice(error.len(), 1, error.as_slice());
-    //   let gradient_weight = err_col.clone() * DMatrix::from_element(1, self.weights.ncols(), 1.0);
-    //   self.weights -= learn * gradient_weight.map(|x| x.clamp(-1e6, 1e6));
-    //   self.biases -= learn * error.map(|x| x.clamp(-1e6, 1e6));
-    //   return self.weights.transpose() * error();
-       
         let err_col = DMatrix::from_column_slice(self.weights.nrows(),1,error.as_slice());
         let gradient_weight = err_col.clone() * DMatrix::from_row_slice(1, self.weights.ncols(), vec![1.0; self.weights.ncols()].as_slice());
         self.weights-= learn * gradient_weight;
